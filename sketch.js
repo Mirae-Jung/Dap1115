@@ -1,23 +1,25 @@
-let systems = []; //systems 배열 변서 설정
+let ps;
+let repeller;
+//변수 지정
 
 function setup() {
-  let text = createP("click to add particle systems");
-  //text라는 변수를 지정해 "click to add particle systems"라는 텍스트 추출시키
-  text.position(10, 365);
-  //text라는 변수에 postion이라는 함수를 적
-
-  createCanvas(640, 360); //배경 캔버스 크기 설
+  createCanvas(640, 360);
+  ps = new ParticleSystem(createVector(width/2, 50));
+  //ps = ParticleSystem의 클래스
+  repeller = new Repeller(width/2, height / 2);
+  //repeller = Repeller 클래스
 }
 
 function draw() {
   background(51);
-  for (let i = 0; i < systems.length; i++) {
-    systems[i].addParticle();
-    systems[i].run();
-  } //systems라는 배열 안의 변수들에 0번부터 마지막 번호가 될때까지 하나씩 뒤로 가면서
-  //addParticle, run이라는 함수를 적용
-}
+  ps.addParticle(mouseX, mouseY);
+  //ps에 addPartcle을 적용시키는데 마우스의 위치에 따라 달라짐
 
-function mousePressed() {
-  systems.push(new ParticleSystem(1, createVector(mouseX, mouseY)));
-}//마우스를 누를때마다 system변수에 push 함수 적용
+  // Apply gravity force to all Particles
+  let gravity = createVector(0, 0.1);
+  ps.applyForce(gravity);
+  ps.applyRepeller(repeller);
+
+  repeller.display();
+  ps.run();
+}
